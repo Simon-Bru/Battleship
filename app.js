@@ -10,9 +10,9 @@ input = readline.createInterface({
 var play = true;
 
 // Stream
-console.log("Welcome on Battleships ! Tape 'start' to begin a game or 'exit' to quit this app : \n");
+console.log("Welcome on Battleships ! Tape 'start' ('s') to begin a game or 'exit' ('e') to quit this app : \n");
 input.on("line", function(ans){
-    if(ans == "start"){
+    if(ans == "start" || ans == "s"){
       shipGenerator(function(err, data){
         if (err)
           console.error("Ship generating error: " + err);
@@ -20,10 +20,10 @@ input.on("line", function(ans){
       });
       console.log("Game started ! Tap the coordinates of the case you want to bomb (ex: A5).\nTap exit to quit the game.\n");
       input.on("line", function(answer){
-        console.log(answer[0]);
+
       });
     }
-    else if(ans == "exit"){
+    else if(ans == "exit" || ans == "e"){
       input.close();
     }
     else {

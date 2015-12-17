@@ -15,23 +15,15 @@ function ship(size){
   coordinates[0][0] = parseInt(Math.random()*10);
   coordinates[0][1] = parseInt(Math.random()*10);
   // Determination of the axe we will orientate the ship
-  var axe = parseInt(Math.random()); //0->X 1->Y
+  var axe = Math.round(Math.random()); //0->X 1->Y
   // Assignation of the end coordinate of axe we don't touch
-  switch(axe){
-    case 0:
-      coordinates[1][1] = coordinates[0][1];
-      break;
-
-    case 1:
-      coordinates[1][0] = coordinates[0][0];
-      break;
-  }
+  coordinates[1][1-axe] = coordinates[0][1-axe];
 
   var side;
-  if(coordinates[0][axe] + size <= 10){
+  if(coordinates[0][axe] + size <= 10){   //Verification that the ship is'nt bigger than the map
     if(coordinates[0][axe] - size >= 0){
       // Determination of the orientation (2 possibilities)
-      sign = parseInt(Math.random()*(-2)+1); //-1 or 1
+      sign = Math.round(Math.random()) * (-2) + 1; //-1 or 1
       coordinates[1][axe] = coordinates[0][axe] + (sign*size);
     }
     else {
