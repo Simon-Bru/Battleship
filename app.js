@@ -22,12 +22,13 @@ input.on("line", function(ans){
       if(!play){
         displayGrid(gridSize, null);    //We display the grid
         // We generate the computer's ships randomly
-        ships = shipGenerator(gridSize, function(err, data){
+        var ships = shipGenerator(gridSize, function(err, data){
           if (err)    //Error display
-          console.error("Error": err);
+          console.error("Error:"+ err);
           // We store the ships into array
-          var ships = data;
+          return data;
         });
+        console.log(ships);
         console.log("Game started ! To bomb a case, type its name. (ex: 'A5')");
         play = true;
       }
@@ -58,7 +59,7 @@ input.on("line", function(ans){
 
     default:      //If no command recognised -> error displayed
       if(play){
-        
+
       }
       else {
         console.error("Input not recognised. Type 'start' ('s') to begin.\nType 'settings n' with n the number of squares to change the grid size.\nType 'exit' to quit.");
