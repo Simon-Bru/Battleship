@@ -2,10 +2,21 @@
 module.exports = function shipGenerator(gridSize, callback){
   var ships = [];
   // Creation of a battleship (5 squares)
-  ships.push(ship(5, gridSize));
+  ships.push(ship(4, gridSize));
   // Creation of 2 destroyers (4 squares)
-  ships.push(ship(4, gridSize));
-  ships.push(ship(4, gridSize));
+  var destroyer = ship(3, gridSize);
+  //while the destroyer is over the battleship
+  while(Over(ships[0], destroyer)){
+    destroyer = ship(3, gridSize);  //We generate an other ship
+  }
+  //We add the destroyer to the table
+  ships.push(destroyer);
+  var destroyer2 = ship(3, gridSize);
+  //While destroyer2is over the battleship or the destroyer1
+  while(Over(ships[0], destroyer2) || Over(ships[1], destroyer2)){
+    destroyer2 = ship(3, gridSize);       //We generate an other ship
+  }
+  ships.push(destroyer2);
   return callback(null, ships);
 }
 
@@ -25,6 +36,7 @@ function ship(size, gridSize){
 
 //Function returning false if ship1 is over ship2
 function Over(ship1, ship2){
+  //Definition of the orientation axe of ship1
   switch(ship1[0][0]){
     case ship1[1][0]:
       var axe = 0;
@@ -35,6 +47,7 @@ function Over(ship1, ship2){
       break;
   }
 
+  // Definition of the orientation of ship2
   switch(ship2[0][0]){
     case ship2[0][0]:
       var axe2 = 0;
@@ -65,10 +78,10 @@ function Over(ship1, ship2){
 
     default:      //If ships are not oriented the same way
       for(var x = ship1[0][(axe-1)*(-1)]; x < ship1[1][(axe-1)*(-1)]; x++){   //For each axe coordinate of ship1
-        if(x == ship2[0][axe2]){
-          for(var y = ship2[0][(axe2-1)*(-1)]; y < ship2[1][(axe2-1)*(-1)]; y++){
-            if(y == ship1[0][axe]){
-              return true;
+        if(x == ship2[0][axe2]){                                                //If the coordinate is equal to the orientation axe of ship2
+          for(var y = ship2[0][(axe2-1)*(-1)]; y < ship2[1][(axe2-1)*(-1)]; y++){  //For each axe coordinate of ship2
+            if(y == ship1[0][axe]){                                                     //If the coordinate is equal to the orientation axe of ship1
+              return true;                                                                //Ships are superposed
             }
           }
           return false;
