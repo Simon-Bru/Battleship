@@ -95,10 +95,8 @@ exports.isHit = function isHit(hit, ships){
     bool;
   ships.forEach(function(ship){
     axe = orientation(ship);
-    console.log(ship[0][axe]);
     if(hit[axe] == ship[0][axe]){
       for(var i=ship[0][(axe-1)*(-1)]; i < ship[1][(axe-1)*(-1)]; i++){
-        console.log(i + "&" + hit[(axe-1)*(-1)]);
         if(hit[(axe-1)*(-1)] == i){
           bool = true;
           break;

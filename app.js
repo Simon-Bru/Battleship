@@ -3,7 +3,9 @@ var Ship = require('./shipGenerator');
 var gridSize = 10;  //Size of the grid (= 10 by default)
 var alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 var ships; //Computer's ships table
+var hits = []; //User's hits
 var play = false; //Boolean to tell wether the game began or not
+
 
 // Stream reading interface
 input = readline.createInterface({
@@ -30,8 +32,13 @@ input.on("line", function(ans){
           return data;
         });
         console.log(ships);
-        // Initialisation of the table of hits of the player
-        var hits = [];
+        // Initialisation of the table of hits of the player with null
+        for(var i=0; i<gridSize; i++){
+        	hits[i] = [];
+        	for(var j=0; j<gridSize; j++){
+          	hits[i][j] = null;
+          }
+        }
         console.log("Game started ! To bomb a case, type its coordinates with the format 'A5' for example.");
         play = true;
       }
@@ -71,9 +78,22 @@ input.on("line", function(ans){
           else {
             // We get the number entered
             var number = ans.substring(1, ans.length);
-            if(Number(number) == number && number < gridSize){ //We check the number is part of the grid
-              console.log(Ship.isHit([number-1, letterIndex], ships));
-
+            if(Number(number) == number && number < gridSize && number > 0){ //We check the number is part of the grid
+              if(hits[number-1][letterIndex] == null){
+                console.log(number-1);
+                console.log(letterIndex);
+                if(Ship.isHit([number-1, letterIndex], ships)){
+                  hits[number-1][letterIndex] = true;
+                }
+                else {
+                  hits[number-1][letterIndex] = false;
+                }
+                displayGrid(gridSize, hits);
+                console.log(hits[number-1][letterIndex]);
+              }
+              else {
+                console.log("You already bomb that case. Try another one");
+              }
             }
             else {
               console.error("You must enter a number inferior to " + gridSize);
@@ -93,17 +113,34 @@ input.on("line", function(ans){
 
 // Grid displaying function
 function displayGrid(l, hits){
-  var row = "";
+  var row = " ";
+  console.log(hits);
   // Colomns' numbers display
-  for(var k=1; k<=l; k++){
-    row = row + " " + k;
+  for(var k=0; k<l; k++){
+    row = row + " " + alphabet[k];
   }
   console.log(row);
   // Grid display
   for(var i=0; i<l; i++){
-    row = alphabet[i];
+    if(i >= 9){
+      row = i+1;
+    }
+    else {
+      row = i+1 + " ";
+    }
     for(var j=0; j<l; j++){
-      row = row + "_|";
+      if(hits != null && hits[i][j] != null){
+        if(hits[i][j] == true){
+          char = "x";
+        }
+        else if(hits[i][j] == false){
+          char = "o";
+        }
+        row = row + char + "|";
+      }
+      else {
+        row = row + "_|";
+      }
     }
     console.log(row);
   }
