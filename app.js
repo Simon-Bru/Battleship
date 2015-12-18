@@ -1,7 +1,8 @@
 var readline = require('readline');
-var shipGenerator = require('./shipGenerator');
+var Ship = require('./shipGenerator');
 var gridSize = 10;  //Size of the grid (= 10 by default)
 var alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+var ships; //Computer's ships table
 var play = false; //Boolean to tell wether the game began or not
 
 // Stream reading interface
@@ -22,14 +23,16 @@ input.on("line", function(ans){
       if(!play){
         displayGrid(gridSize, null);    //We display the grid
         // We generate the computer's ships randomly
-        var ships = shipGenerator(gridSize, function(err, data){
+        ships = Ship.generate(gridSize, function(err, data){
           if (err)    //Error display
           console.error("Error:"+ err);
           // We store the ships into array
           return data;
         });
         console.log(ships);
-        console.log("Game started ! To bomb a case, type its name. (ex: 'A5')");
+        // Initialisation of the table of hits of the player
+        var hits = [];
+        console.log("Game started ! To bomb a case, type its coordinates with the format 'A5' for example.");
         play = true;
       }
       else {
@@ -58,8 +61,28 @@ input.on("line", function(ans){
       break;
 
     default:      //If no command recognised -> error displayed
-      if(play){
+      if(play){     //Game interface
+        if(typeof ans[0] == "string"){
+          // We get the index of the letter entered
+          letterIndex = alphabet.indexOf(ans[0]);
+          if(letterIndex > gridSize){ //We check the letter is part of the grid
+            console.error(ans[0]+" is not part a coordinate of the grid, you must enter a letter between A and "+alphabet[gridSize]);
+          }
+          else {
+            // We get the number entered
+            var number = ans.substring(1, ans.length);
+            if(Number(number) == number && number < gridSize){ //We check the number is part of the grid
+              console.log(Ship.isHit([number-1, letterIndex], ships));
 
+            }
+            else {
+              console.error("You must enter a number inferior to " + gridSize);
+            }
+          }
+        }
+        else {
+          console.error("You must type the coordinate of the case with the format 'A5' or 'E3' ...")
+        }
       }
       else {
         console.error("Input not recognised. Type 'start' ('s') to begin.\nType 'settings n' with n the number of squares to change the grid size.\nType 'exit' to quit.");

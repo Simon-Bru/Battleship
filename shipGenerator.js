@@ -1,5 +1,5 @@
 // Module generating the position of computer's ships
-module.exports = function shipGenerator(gridSize, callback){
+exports.generate = function generate(gridSize, callback){
   var ships = [];
   // Creation of a battleship (5 squares)
   ships.push(ship(4, gridSize));
@@ -37,26 +37,10 @@ function ship(size, gridSize){
 //Function returning false if ship1 is over ship2
 function Over(ship1, ship2){
   //Definition of the orientation axe of ship1
-  switch(ship1[0][0]){
-    case ship1[1][0]:
-      var axe = 0;
-      break;
-
-    default:
-      var axe = 1;
-      break;
-  }
+  var axe = orientation(ship1);
 
   // Definition of the orientation of ship2
-  switch(ship2[0][0]){
-    case ship2[0][0]:
-      var axe2 = 0;
-      break;
-
-    default:
-      var axe2 = 1;
-      break;
-  }
+  var axe2 = orientation(ship2);
 
   switch(axe){
     case axe2:        //If ships' orientation is on the same axe
@@ -81,7 +65,7 @@ function Over(ship1, ship2){
         if(x == ship2[0][axe2]){                                                //If the coordinate is equal to the orientation axe of ship2
           for(var y = ship2[0][(axe2-1)*(-1)]; y < ship2[1][(axe2-1)*(-1)]; y++){  //For each axe coordinate of ship2
             if(y == ship1[0][axe]){                                                     //If the coordinate is equal to the orientation axe of ship1
-              return true;                                                                //Ships are superposed
+              return true;                                                                //Ships are superimposed
             }
           }
           return false;
@@ -90,5 +74,37 @@ function Over(ship1, ship2){
       }
       break;
   }
+}
 
+// Function returning the orientation axe of the ship
+function orientation(ship){
+  switch(ship[0][0]){
+    case ship[1][0]:
+      return 0;
+      break;
+
+    default:
+      return 1;
+      break;
+  }
+}
+
+// Function to tell a ship is touched after a hit
+exports.isHit = function isHit(hit, ships){
+  var axe,
+    bool;
+  ships.forEach(function(ship){
+    axe = orientation(ship);
+    console.log(ship[0][axe]);
+    if(hit[axe] == ship[0][axe]){
+      for(var i=ship[0][(axe-1)*(-1)]; i < ship[1][(axe-1)*(-1)]; i++){
+        console.log(i + "&" + hit[(axe-1)*(-1)]);
+        if(hit[(axe-1)*(-1)] == i){
+          bool = true;
+          break;
+        }
+      }
+    }
+  });
+  return bool;
 }
