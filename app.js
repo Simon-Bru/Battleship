@@ -31,7 +31,6 @@ input.on("line", function(ans){
           // We store the ships into array
           return data;
         });
-        console.log(ships);
         // Initialisation of the table of hits of the player with null
         for(var i=0; i<gridSize; i++){
         	hits[i] = [];
