@@ -31,6 +31,7 @@ input.on("line", function(ans){
           // We store the ships into array
           return data;
         });
+        console.log(ships);
         // Initialisation of the table of hits of the player with null
         for(var i=0; i<gridSize; i++){
         	hits[i] = [];
@@ -77,7 +78,8 @@ input.on("line", function(ans){
           else {
             // We get the number entered
             var number = ans.substring(1, ans.length);
-            if(Number(number) == number && number <= gridSize && number > 0){ //We check the number is part of the grid
+
+            if(Number(number) == number && Number(number) <= gridSize && Number(number) > 0){ //We checkif the number is part of the grid
               if(hits[number-1][letterIndex] == null){
                 var isHit = Ship.isHit([number-1, letterIndex], ships);
                 if(isHit != false){
@@ -89,6 +91,7 @@ input.on("line", function(ans){
                     console.log(boat + " sunk ! Only "+ships.length+" ships left !");
                     if(ships.length == 0){
                       console.log("You won ! Congratulations ! If you want to play again, just relaunch the app ! Thank you for playing :)");
+                      input.close();
                     }
                   }
                   else {
@@ -126,7 +129,7 @@ function displayGrid(l, hits){
   var row = " ";
   // Colomns' numbers display
   for(var k=0; k<l; k++){
-    row = row + " " + alphabet[k];
+    row = row + " " + alphabet[k].toUpperCase();
   }
   console.log(row);
   // Grid display

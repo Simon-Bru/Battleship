@@ -7,14 +7,14 @@ exports.generate = function generate(gridSize, callback){
   var destroyer = ship(3, gridSize);
   //while the destroyer is over the battleship
   while(Over(ships[0], destroyer)){
-    destroyer = ship(3, gridSize);  //We generate an other ship
+    destroyer = ship(3, gridSize);  //We generate an other destroyer
   }
   //We add the destroyer to the table
   ships.push(destroyer);
   var destroyer2 = ship(3, gridSize);
-  //While destroyer2is over the battleship or the destroyer1
+  //While destroyer2 is over the battleship or the destroyer1
   while(Over(ships[0], destroyer2) || Over(ships[1], destroyer2)){
-    destroyer2 = ship(3, gridSize);       //We generate an other ship
+    destroyer2 = ship(3, gridSize);       //We generate an other destroyer2
   }
   ships.push(destroyer2);
   return callback(null, ships);
@@ -45,10 +45,10 @@ function Over(ship1, ship2){
   switch(axe){
     case axe2:        //If ships' orientation is on the same axe
       if(ship1[0][axe] == ship2[0][axe2]){  //If ships are on the same axe coordinate
-          if(ship1[0][(axe-1)*(-1)] < ship2[0][(axe-1)*(-1)] && ship1[1][(axe-1)*(-1)] < ship2[0][(axe-1)*(-1)]){  //If origin and end of ship1 < origin of ship2
+          if(ship1[0][(axe-1)*(-1)] < ship2[0][(axe-1)*(-1)] && ship1[1][(axe-1)*(-1)] < ship2[0][(axe-1)*(-1)]-1){  //If origin and end of ship1 < origin of ship2
             return false;
           }
-          else if(ship2[0][(axe-1)*(-1)] < ship1[0][(axe-1)*(-1)] && ship2[1][(axe-1)*(-1)] < ship1[0][(axe-1)*(-1)]){  //If origin and end of ship2 < origin of ship1
+          else if(ship2[0][(axe-1)*(-1)] < ship1[0][(axe-1)*(-1)] && ship2[1][(axe-1)*(-1)] < ship1[0][(axe-1)*(-1)]-1){  //If origin and end of ship2 < origin of ship1
             return false;
           }
           else { //Else, ship2 is over ship1
@@ -61,10 +61,10 @@ function Over(ship1, ship2){
       break;
 
     default:      //If ships are not oriented the same way
-      for(var x = ship1[0][(axe-1)*(-1)]; x < ship1[1][(axe-1)*(-1)]; x++){   //For each axe coordinate of ship1
+      for(var x = ship1[0][(axe-1)*(-1)]; x <= ship1[1][(axe-1)*(-1)]; x++){   //For each axe coordinate of ship1
         if(x == ship2[0][axe2]){                                                //If the coordinate is equal to the orientation axe of ship2
-          for(var y = ship2[0][(axe2-1)*(-1)]; y < ship2[1][(axe2-1)*(-1)]; y++){  //For each axe coordinate of ship2
-            if(y == ship1[0][axe]){                                                     //If the coordinate is equal to the orientation axe of ship1
+          for(var y = ship2[0][(axe2-1)*(-1)]; y <= ship2[1][(axe2-1)*(-1)]; y++){  //For each axe coordinate of ship2
+            if(y == ship1[0][axe] || y == ship1[0][axe]-1){                                                     //If the coordinate is equal to the orientation axe of ship1
               return true;                                                                //Ships are superimposed
             }
           }
