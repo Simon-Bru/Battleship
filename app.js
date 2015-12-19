@@ -1,7 +1,7 @@
 var readline = require('readline');
 var Ship = require('./shipGenerator');
 var gridSize = 10;  //Size of the grid (= 10 by default)
-var alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+var alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
 var ships; //Computer's ships table
 var hits = []; //User's hits
 var play = false; //Boolean to tell wether the game began or not
@@ -31,7 +31,6 @@ input.on("line", function(ans){
           // We store the ships into array
           return data;
         });
-        console.log(ships);
         // Initialisation of the table of hits of the player with null
         for(var i=0; i<gridSize; i++){
         	hits[i] = [];
@@ -71,9 +70,9 @@ input.on("line", function(ans){
       if(play && ships.length > 0){     //Game interface
         if(typeof ans[0] == "string"){
           // We get the index of the letter entered
-          letterIndex = alphabet.indexOf(ans[0]);
-          if(letterIndex > gridSize){ //We check the letter is part of the grid
-            console.error(ans[0]+" is not part a coordinate of the grid, you must enter a letter between A and "+alphabet[gridSize]);
+          letterIndex = alphabet.indexOf(ans[0].toLowerCase());
+          if(letterIndex > gridSize || letterIndex < 0){ //We check the letter is part of the grid
+            console.error(ans[0]+" is not part a coordinate of the grid, you must enter a letter between A and "+alphabet[gridSize].toUpperCase());
           }
           else {
             // We get the number entered
