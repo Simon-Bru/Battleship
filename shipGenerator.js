@@ -89,20 +89,61 @@ function orientation(ship){
   }
 }
 
-// Function to tell a ship is touched after a hit
+// Function telling a ship is touched after a hit and returning his coordinates if yes
 exports.isHit = function isHit(hit, ships){
-  var axe,
-    bool;
-  ships.forEach(function(ship){
-    axe = orientation(ship);
-    if(hit[axe] == ship[0][axe]){
-      for(var i=ship[0][(axe-1)*(-1)]; i < ship[1][(axe-1)*(-1)]; i++){
-        if(hit[(axe-1)*(-1)] == i){
-          bool = true;
+  var axe;
+  var bool = false;
+  ships.forEach(function(ship){   //For each ships
+    axe = orientation(ship);        //Definition of his orientation
+    if(hit[axe] == ship[0][axe]){       //If the hit is on the ship's orientation axe
+      for(var i=ship[0][(axe-1)*(-1)]; i <= ship[1][(axe-1)*(-1)]; i++){     //For i origin of ship .. end of ship
+        if(hit[(axe-1)*(-1)] == i){                                           //If the other coordinate of the hit is equal to i
+          bool = ship;                                                          //The ship is hit
           break;
         }
       }
     }
   });
   return bool;
+}
+
+//Function telling wether a ship is sunk or not
+exports.Sunk = function isSunk(hits, ship){
+  var orient = orientation(ship);
+  var axe = (orient-1)*(-1);
+
+  switch(orient){
+    case 0:
+      for(var i = ship[0][axe]; i <= ship[1][axe]; i++){
+        if(hits[ship[0][orient]][i] == false || hits[ship[0][orient]][i] == null){
+          return false;
+          break;
+        }
+      }
+      break;
+
+    case 1:
+      for(var i = ship[0][axe]; i <= ship[1][axe]; i++){
+        if(hits[i][ship[0][orient]] == false || hits[i][ship[0][orient]] == null){
+          return false;
+          break;
+        }
+      }
+      break;
+  }
+  return true;
+}
+
+//Function to return the name of the ship
+exports.shipName = function shipName(ship){
+  var axe = orientation(ship);
+  switch(ship[1][(axe-1)*(-1)] - ship[0][(axe-1)*(-1)]){
+    case 3:
+      return "Destroyer";
+      break;
+
+    case 4:
+      return "Battleship";
+      break;
+  }
 }

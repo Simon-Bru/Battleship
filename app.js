@@ -68,7 +68,7 @@ input.on("line", function(ans){
       break;
 
     default:      //If no command recognised -> error displayed
-      if(play){     //Game interface
+      if(play && ships.length > 0){     //Game interface
         if(typeof ans[0] == "string"){
           // We get the index of the letter entered
           letterIndex = alphabet.indexOf(ans[0]);
@@ -78,21 +78,32 @@ input.on("line", function(ans){
           else {
             // We get the number entered
             var number = ans.substring(1, ans.length);
-            if(Number(number) == number && number < gridSize && number > 0){ //We check the number is part of the grid
+            if(Number(number) == number && number <= gridSize && number > 0){ //We check the number is part of the grid
               if(hits[number-1][letterIndex] == null){
-                console.log(number-1);
-                console.log(letterIndex);
-                if(Ship.isHit([number-1, letterIndex], ships)){
+                var isHit = Ship.isHit([number-1, letterIndex], ships);
+                if(isHit != false){
                   hits[number-1][letterIndex] = true;
+
+                  if(Ship.Sunk(hits, isHit)){
+                    ships.splice(ships.indexOf(isHit), 1);
+                    var boat = Ship.shipName(isHit);
+                    console.log(boat + " sunk ! Only "+ships.length+" ships left !");
+                    if(ships.length == 0){
+                      console.log("You won ! Congratulations ! If you want to play again, just relaunch the app ! Thank you for playing :)");
+                    }
+                  }
+                  else {
+                    console.log('HIT ! Continue on that way !');
+                  }
                 }
                 else {
                   hits[number-1][letterIndex] = false;
+                  console.log('MISSED ! Try again');
                 }
                 displayGrid(gridSize, hits);
-                console.log(hits[number-1][letterIndex]);
               }
               else {
-                console.log("You already bomb that case. Try another one");
+                console.log("You already bombed that case. Try another one");
               }
             }
             else {
@@ -114,7 +125,6 @@ input.on("line", function(ans){
 // Grid displaying function
 function displayGrid(l, hits){
   var row = " ";
-  console.log(hits);
   // Colomns' numbers display
   for(var k=0; k<l; k++){
     row = row + " " + alphabet[k];
@@ -122,11 +132,9 @@ function displayGrid(l, hits){
   console.log(row);
   // Grid display
   for(var i=0; i<l; i++){
-    if(i >= 9){
-      row = i+1;
-    }
-    else {
-      row = i+1 + " ";
+    row = i+1;
+    if(i < 9){
+      row = row + " ";
     }
     for(var j=0; j<l; j++){
       if(hits != null && hits[i][j] != null){
